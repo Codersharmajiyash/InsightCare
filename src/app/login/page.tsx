@@ -39,12 +39,27 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
     if (!email || !password) {
       setError('Please enter both email and password');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
       return;
     }
 
@@ -157,6 +172,8 @@ export default function LoginPage() {
                 margin="normal"
                 required
                 autoComplete="email"
+                error={email !== '' && !validateEmail(email)}
+                helperText={email !== '' && !validateEmail(email) ? 'Please enter a valid email address' : ''}
               />
 
               <TextField

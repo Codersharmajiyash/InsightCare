@@ -43,27 +43,87 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateName = (name: string) => {
+    return name.length >= 2 && /^[a-zA-Z\s]+$/.test(name);
+  };
+
+  const validatePassword = (password: string) => {
+    return password.length >= 6 && /^(?=.*[A-Za-z])(?=.*\d)/.test(password);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
     setError('');
+
+    // Real-time validation
+    let errorMsg = '';
+    switch (name) {
+      case 'name':
+        if (value !== '' && !validateName(value)) {
+          errorMsg = 'Name must be at least 2 characters and contain only letters';
+        }
+        break;
+      case 'email':
+        if (value !== '' && !validateEmail(value)) {
+          errorMsg = 'Please enter a valid email address';
+        }
+        break;
+      case 'password':
+        if (value !== '' && !validatePassword(value)) {
+          errorMsg = 'Password must be at least 6 characters with letters and numbers';
+        }
+        break;
+      case 'confirmPassword':
+        if (value !== '' && formData.password !== value) {
+          errorMsg = 'Passwords do not match';
+        }
+        break;
+    }
+
+    setFieldErrors({
+      ...fieldErrors,
+      [name]: errorMsg,
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    // Validation
+    // Enhanced Validation
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
       setError('Please fill in all fields');
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
+    if (!validateName(formData.name)) {
+      setError('Name must be at least 2 characters and contain only letters');
+      return;
+    }
+
+    if (!validateEmail(formData.email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    if (!validatePassword(formData.password)) {
+      setError('Password must be at least 6 characters with letters and numbers');
       return;
     }
 
@@ -182,6 +242,8 @@ export default function SignUpPage() {
                 margin="normal"
                 required
                 autoComplete="name"
+                error={!!fieldErrors.name}
+                helperText={fieldErrors.name || 'Enter your full name'}
               />
 
               <TextField
@@ -194,6 +256,8 @@ export default function SignUpPage() {
                 margin="normal"
                 required
                 autoComplete="email"
+                error={!!fieldErrors.email}
+                helperText={fieldErrors.email || 'Enter a valid email address'}
               />
 
               <TextField
@@ -206,7 +270,8 @@ export default function SignUpPage() {
                 margin="normal"
                 required
                 autoComplete="new-password"
-                helperText="At least 6 characters"
+                error={!!fieldErrors.password}
+                helperText={fieldErrors.password || "At least 6 characters with letters and numbers"}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -231,6 +296,8 @@ export default function SignUpPage() {
                 margin="normal"
                 required
                 autoComplete="new-password"
+                error={!!fieldErrors.confirmPassword}
+                helperText={fieldErrors.confirmPassword || "Re-enter your password"}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">

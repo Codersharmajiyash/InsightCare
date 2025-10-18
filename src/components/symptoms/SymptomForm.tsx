@@ -105,7 +105,21 @@ export default function SymptomForm({ onSubmit, isLoading = false }: SymptomForm
                   <Controller
                     name={`symptoms.${index}.name`}
                     control={control}
-                    rules={{ required: 'Symptom name is required' }}
+                    rules={{ 
+                      required: 'Symptom name is required',
+                      minLength: {
+                        value: 2,
+                        message: 'Symptom name must be at least 2 characters'
+                      },
+                      maxLength: {
+                        value: 100,
+                        message: 'Symptom name must not exceed 100 characters'
+                      },
+                      pattern: {
+                        value: /^[a-zA-Z\s\-']+$/,
+                        message: 'Symptom name can only contain letters, spaces, hyphens, and apostrophes'
+                      }
+                    }}
                     render={({ field }) => (
                       <TextField
                         {...field}
