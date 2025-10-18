@@ -1,6 +1,6 @@
-# InsightCare - Healthcare Web Application
+# InsightCare - Quantum AI-Powered Healthcare Platform
 
-A modern healthcare web application built with Next.js that provides AI-powered symptom analysis and diagnosis predictions.
+InsightCare is a cutting-edge healthcare application leveraging quantum AI technology to provide highly accurate, personalized disease diagnosis from symptom analysis with exceptional precision.
 
 ## Features
 
