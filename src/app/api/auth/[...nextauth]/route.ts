@@ -2,6 +2,8 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+
 const handler = NextAuth({
   providers: [
     GoogleProvider({
@@ -15,26 +17,46 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        // TODO: Replace with actual database lookup
-        // This is a mock implementation for demo purposes
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
 
-        // Mock user data - In production, verify against database
-        const user = {
-          id: '1',
-          name: credentials.email.split('@')[0],
-          email: credentials.email,
-          image: null,
-        };
+        try {
+          // Call your FastAPI backend for authentication
+          const response = await fetch(`${API_URL}/auth/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+          });
 
-        // In production: verify password hash, check user exists, etc.
-        if (credentials.password.length >= 6) {
-          return user;
+          if (!response.ok) {
+            console.error('Backend auth failed:', response.status);
+            return null;
+          }
+
+          const data = await response.json();
+
+          if (data && data.access_token) {
+            // Return user data that will be stored in the session
+            return {
+              id: data.user.id,
+              email: data.user.email,
+              name: data.user.name || data.user.username || data.user.email.split('@')[0],
+              image: null,
+              accessToken: data.access_token,
+            };
+          }
+
+          return null;
+        } catch (error) {
+          console.error('Backend authentication error:', error);
+          return null;
         }
-
-        return null;
       }
     })
   ],
@@ -50,6 +72,8 @@ const handler = NextAuth({
         session.user.email = token.email as string;
         session.user.name = token.name as string;
         session.user.id = token.sub as string;
+        // Store backend access token in session for API calls
+        (session as any).accessToken = token.accessToken;
       }
       return session;
     },
@@ -58,6 +82,8 @@ const handler = NextAuth({
         token.email = user.email;
         token.name = user.name;
         token.id = user.id;
+        // Store backend access token in JWT
+        token.accessToken = (user as any).accessToken;
       }
       return token;
     },
