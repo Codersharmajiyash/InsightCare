@@ -102,21 +102,19 @@ export default function ContactPage() {
             </Typography>
             <Typography
               variant="h5"
-              color="text.secondary"
-              sx={{
-                maxWidth: 700,
-                mx: 'auto',
-                fontWeight: 500,
-                lineHeight: 1.8,
-              }}
-            >
-              Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
-            </Typography>
-          </MotionBox>
-        </Container>
-      </Box>
-
-      {/* Contact Info Cards */}
+            color="text.secondary"
+            sx={{
+              maxWidth: 700,
+              mx: 'auto',
+              fontWeight: 500,
+              lineHeight: 1.8,
+            }}
+          >
+            Have questions? We&apos;d love to hear from you. Send us a message and we&apos;ll respond as soon as possible.
+          </Typography>
+        </MotionBox>
+      </Container>
+    </Box>      {/* Contact Info Cards */}
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
         <Grid container spacing={4} sx={{ mb: 8 }}>
           {contactInfo.map((info, index) => (

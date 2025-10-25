@@ -127,18 +127,16 @@ export default function CareersPage() {
               sx={{
                 maxWidth: 700,
                 mx: 'auto',
-                fontWeight: 500,
-                lineHeight: 1.8,
-              }}
-            >
-              Help us revolutionize healthcare and make a real difference in people's lives.
-              We're looking for passionate individuals to join our team.
-            </Typography>
-          </MotionBox>
-        </Container>
-      </Box>
-
-      {/* Benefits Section */}
+              fontWeight: 500,
+              lineHeight: 1.8,
+            }}
+          >
+            Help us revolutionize healthcare and make a real difference in people&apos;s lives.
+            We&apos;re looking for passionate individuals to join our team.
+          </Typography>
+        </MotionBox>
+      </Container>
+    </Box>      {/* Benefits Section */}
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
         <Typography
           variant="h2"
@@ -312,10 +310,10 @@ export default function CareersPage() {
           transition={{ duration: 0.8 }}
         >
           <Typography variant="h3" fontWeight={800} sx={{ mb: 2 }}>
-            Don't See Your Role?
+            Don&apos;t See Your Role?
           </Typography>
           <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
-            We're always looking for talented people. Send us your resume and we'll keep you in mind
+            We&apos;re always looking for talented people. Send us your resume and we&apos;ll keep you in mind
             for future opportunities.
           </Typography>
           <Button
